@@ -44,8 +44,8 @@ const ClassesCreate = () => {
 
   const onSubmit = async (values: z.infer<typeof classSchema>) => {
     try {
-      // await onFinish(values);
-      console.log(values)
+      await onFinish(values);
+      // console.log(values)
     } catch (error) {
       console.error("Error creating class:", error);
     }
@@ -69,6 +69,21 @@ const ClassesCreate = () => {
     },
 
   ];
+
+  // const teachers = [
+  //   {
+  //     id: "1",
+  //     name: "John Doe",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Jane Smith",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Kelvin Scott",
+  //   },
+  // ];
 
   const subjects = [
     {
@@ -140,9 +155,9 @@ const ClassesCreate = () => {
                           value={
                             field.value
                               ? {
-                                  url: field.value,
-                                  publicId: bannerPublicId ?? "",
-                                }
+                                url: field.value,
+                                publicId: bannerPublicId ?? "",
+                              }
                               : null
                           }
                           onChange={(file) => {
@@ -201,7 +216,7 @@ const ClassesCreate = () => {
                             field.onChange(Number(value))
                           }
                           value={field.value?.toString()}
-                          // disabled={subjectsLoading}
+                        // disabled={subjectsLoading}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
@@ -235,7 +250,7 @@ const ClassesCreate = () => {
                         <Select
                           onValueChange={field.onChange}
                           value={field.value?.toString()}
-                          // disabled={teachersLoading}
+                        // disabled={teachersLoading}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
@@ -244,7 +259,7 @@ const ClassesCreate = () => {
                           </FormControl>
                           <SelectContent>
                             {teachers.map((teacher) => (
-                              <SelectItem key={teacher.id} value={teacher.id}>
+                              <SelectItem key={teacher.id} value={teacher.id.toString()}>
                                 {teacher.name}
                               </SelectItem>
                             ))}
@@ -344,7 +359,7 @@ const ClassesCreate = () => {
                     "Create Class"
                   )}
                 </Button>
-                
+
               </form>
             </Form>
           </CardContent>
