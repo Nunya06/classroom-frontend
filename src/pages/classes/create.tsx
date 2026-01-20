@@ -1,37 +1,23 @@
+import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb'
+import { CreateView } from '@/components/refine-ui/views/create-view'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { useBack } from '@refinedev/core'
 import { useForm } from "@refinedev/react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { CreateView } from "@/components/refine-ui/views/create-view";
-import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
-
-import { Textarea } from "@/components/ui/textarea";
-import { useBack, useList } from "@refinedev/core";
-import { Loader2 } from "lucide-react";
-import { classSchema } from "@/lib/schema";
-import UploadWidget from "@/components/upload-widget";
-import { Subject, User } from "@/types";
-import z from "zod";
+import * as z from "zod";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
+import { classSchema } from '@/lib/schema'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Loader2 } from 'lucide-react'
+import UploadWidget from '@/components/upload-widget'
 
 const ClassesCreate = () => {
+
   const back = useBack();
 
   const form = useForm({
@@ -40,10 +26,12 @@ const ClassesCreate = () => {
       resource: "classes",
       action: "create",
     },
-    defaultValues: {
-      status: "active",
-    },
+    // defaultValues: {
+    //   status: "active",
+    // },
   });
+
+  const bannerPublicId = form.watch("bannerCldPubId");
 
   const {
     refineCore: { onFinish },
@@ -52,53 +40,75 @@ const ClassesCreate = () => {
     control,
   } = form;
 
-  const bannerPublicId = form.watch("bannerCldPubId");
+  // const { handleSubmit, formState: { isSubmitting, control } } = form
 
   const onSubmit = async (values: z.infer<typeof classSchema>) => {
     try {
-      await onFinish(values);
+      // await onFinish(values);
+      console.log(values)
     } catch (error) {
       console.error("Error creating class:", error);
     }
   };
 
-  // Fetch subjects list
-  const { query: subjectsQuery } = useList<Subject>({
-    resource: "subjects",
-    pagination: {
-      pageSize: 100,
+  const teachers = [
+    {
+      id: 1,
+      name: "John Doe",
+
     },
-  });
+    {
+      id: 2,
+      name: "Jane Smith",
 
-  // Fetch teachers list
-  const { query: teachersQuery } = useList<User>({
-    resource: "users",
-    filters: [
-      {
-        field: "role",
-        operator: "eq",
-        value: "teacher",
-      },
-    ],
-    pagination: {
-      pageSize: 100,
     },
-  });
+    {
+      id: 3,
+      name: "Kelvin Scott",
 
-  const teachers = teachersQuery.data?.data || [];
-  const teachersLoading = teachersQuery.isLoading;
+    },
 
-  const subjects = subjectsQuery.data?.data || [];
-  const subjectsLoading = subjectsQuery.isLoading;
+  ];
+
+  const subjects = [
+    {
+      id: 1,
+      name: "Mathematics",
+      code: "MATH"
+    },
+    {
+      id: 2,
+      name: "Computer Science",
+      code: "CS"
+    },
+    {
+      id: 3,
+      name: "Physics",
+      code: "PHY"
+    },
+    {
+      id: 4,
+      name: "Chemistry",
+      code: "CHEM"
+    },
+
+  ];
+
+  //  const teachers = teachersQuery.data?.data || [];
+  // const teachersLoading = teachersQuery.isLoading;
+
+  // const subjects = subjectsQuery.data?.data || [];
+  // const subjectsLoading = subjectsQuery.isLoading;
 
   return (
-    <CreateView className="class-view">
+    <CreateView className='class-view'>
       <Breadcrumb />
 
       <h1 className="page-title">Create a Class</h1>
+
       <div className="intro-row">
-        <p>Provide the required information below to add a class.</p>
-        <Button onClick={() => back()}>Go Back</Button>
+        <p>Provide the required information below to add a class</p>
+        <Button onClick={back}>Go Back</Button>
       </div>
 
       <Separator />
@@ -115,7 +125,8 @@ const ClassesCreate = () => {
 
           <CardContent className="mt-7">
             <Form {...form}>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+
                 <FormField
                   control={control}
                   name="bannerUrl"
@@ -166,15 +177,11 @@ const ClassesCreate = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        Class Name <span className="text-orange-600">*</span>
-                      </FormLabel>
+                      <FormLabel>Class Name<span className='text-orange-600'>*</span></FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Introduction to Biology - Section A"
-                          {...field}
-                        />
+                        <Input placeholder="Introduction to DSA" {...field} />
                       </FormControl>
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -194,7 +201,7 @@ const ClassesCreate = () => {
                             field.onChange(Number(value))
                           }
                           value={field.value?.toString()}
-                          disabled={subjectsLoading}
+                          // disabled={subjectsLoading}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
@@ -228,7 +235,7 @@ const ClassesCreate = () => {
                         <Select
                           onValueChange={field.onChange}
                           value={field.value?.toString()}
-                          disabled={teachersLoading}
+                          // disabled={teachersLoading}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
@@ -337,13 +344,15 @@ const ClassesCreate = () => {
                     "Create Class"
                   )}
                 </Button>
+                
               </form>
             </Form>
           </CardContent>
         </Card>
       </div>
-    </CreateView>
-  );
-};
 
-export default ClassesCreate;
+    </CreateView>
+  )
+}
+
+export default ClassesCreate
