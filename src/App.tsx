@@ -16,9 +16,12 @@ import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 
-import { BookOpen, Home } from "lucide-react";
+import { BookOpen, Building2, GraduationCap, Home } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import { dataProvider } from "./providers/data.ts";
+import ClassesList from "./pages/classes/list.tsx";
+import ClassesCreate from "./pages/classes/create.tsx";
+import ClassesShow from "./pages/classes/show.tsx";
 
 
 function App() {
@@ -43,7 +46,27 @@ function App() {
                 },
                 {
                   name: 'subjects', list: '/subjects', create: '/subjects/create', meta: { label: 'Subject', icon: <BookOpen /> }
-                }
+                },
+                {
+                  name: "classes",
+                  list: "/classes",
+                  create: "/classes/create",
+                  // show: "/classes/show/:id",
+                  meta: {
+                    label: "Classes",
+                    icon: <GraduationCap />,
+                  },
+                },
+                // {
+                //   name: "departments",
+                //   list: "/departments",
+                //   show: "/departments/show/:id",
+                //   create: "/departments/create",
+                //   meta: {
+                //     label: "Departments",
+                //     icon: <Building2 />,
+                //   },
+                // },
               ]}
             >
               <Routes>
@@ -52,10 +75,17 @@ function App() {
                     <Outlet />
                   </Layout>}>
                   <Route path="/" element={<Dashboard />} />
+
                   <Route path="/subjects" >
                     <Route index element={<SubjectsList />} />
                     <Route path="create" element={<SubjectsCreate />} />
                     <Route path="show/:id" element={<SubjectsShow />} />
+                  </Route>
+
+                  <Route path="classes">
+                    <Route index element={<ClassesList />} />
+                    <Route path="create" element={<ClassesCreate />} />
+                    <Route path="show/:id" element={<ClassesShow />} />
                   </Route>
                 </Route>
 
